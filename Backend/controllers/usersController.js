@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
 const User = require('../models/User'); 
 
-// Register a new user
+// Register 
 exports.registerUser = async (req, res) => {
   const { username, email, password } = req.body; 
   
@@ -29,7 +29,6 @@ exports.registerUser = async (req, res) => {
       expiresIn: '30d',
     });
 
-    // Respond with the created user and token
     res.status(201).json({
       success: true,
       token,
@@ -43,14 +42,13 @@ exports.registerUser = async (req, res) => {
     });
   } catch (err) {
     console.error(err); // Log the error
-    res.status(500).json({ message: 'Server error' }); // Respond with a server error
+    res.status(500).json({ message: 'Server error' }); 
   }
 };
 
-// Login an existing user
+// Login 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body; // Extract login credentials from request body
-
+  const { email, password } = req.body; 
   try {
     // Find the user by email
     const user = await User.findOne({ email });
