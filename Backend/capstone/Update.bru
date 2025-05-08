@@ -1,0 +1,23 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:5000/api/users/681c7645977390436f469987
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWM3NjQ1OTc3MzkwNDM2ZjQ2OTk4NyIsImlhdCI6MTc0NjY5NjE1MSwiZXhwIjoxNzQ5Mjg4MTUxfQ.YtYhpqERbzawGzZ5tCt3aMumJQ86NexbGzem0SLq5co
+}
+
+body:json {
+  {
+    "username": "JD Master",
+    "email": "JD@gmail.com"
+  }
+  
+}

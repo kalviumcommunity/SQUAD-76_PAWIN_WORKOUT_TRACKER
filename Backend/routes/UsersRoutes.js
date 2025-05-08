@@ -5,6 +5,6 @@ const { registerUser, loginUser, getUserProfile, getAllUsers } = require('../con
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/profile/:id', getUserProfile);
-router.get('/', getAllUsers); 
+router.get('/', getAllUsers);
 
 module.exports = router;
