@@ -124,39 +124,42 @@ exports.getUserProfile = async (req, res) => {
 };
 exports.updateUserProfile = async (req, res) => {
   try {
-    const userId = req.params.id; 
-    const updates = req.body; 
+    const userId = req.params.id;
+    const allowedFields = ['username', 'profilePicture', 'bio']; // Add any other fields you want to allow
+    const updates = {};
 
-    
-    
+    // Filter out unwanted fields
+    for (const key of Object.keys(req.body)) {
+      if (allowedFields.includes(key)) {
+        updates[key] = req.body[key];
+      }
+    }
+
+    // Authorization check
     if (req.user._id.toString() !== userId && !req.user.isAdmin) {
       return res.status(403).json({ message: 'Not authorized to update this profile' });
     }
 
-    
-    if (updates.password || updates.email) {
+    // Prevent email or password updates via this route
+    if ('email' in req.body || 'password' in req.body) {
       return res.status(400).json({ message: 'Email and password updates are not allowed from this endpoint.' });
     }
 
-   
-    
+    // Update user with validation
     const updatedUser = await User.findByIdAndUpdate(userId, updates, {
-      new: true, 
-      runValidators: true, 
-    }).select('-password'); 
+      new: true,
+      runValidators: true,
+    }).select('-password');
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' }); 
+      return res.status(404).json({ message: 'User not found' });
     }
 
-   
-    
+    // Generate new JWT token
     const token = jwt.sign({ id: updatedUser._id }, process.env.JWT_SECRET, {
       expiresIn: '30d',
     });
 
-   
-    
     res.status(200).json({
       success: true,
       token,
@@ -165,13 +168,17 @@ exports.updateUserProfile = async (req, res) => {
         username: updatedUser.username,
         email: updatedUser.email,
         profilePicture: updatedUser.profilePicture,
+        bio: updatedUser.bio,
         createdAt: updatedUser.createdAt,
       },
     });
+
   } catch (err) {
-    console.error(err); 
-    
-    res.status(500).json({ message: 'Server error' }); 
+    console.error("Error in updateUserProfile while updating user profile:", {
+      message: err.message,
+      stack: err.stack,
+    });
+
+    res.status(500).json({ message: 'Server error' });
   }
 };
-
