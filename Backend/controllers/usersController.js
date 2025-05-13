@@ -122,4 +122,56 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching user profile' });
   }
 };
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.id; 
+    const updates = req.body; 
+
+    
+    
+    if (req.user._id.toString() !== userId && !req.user.isAdmin) {
+      return res.status(403).json({ message: 'Not authorized to update this profile' });
+    }
+
+    
+    if (updates.password || updates.email) {
+      return res.status(400).json({ message: 'Email and password updates are not allowed from this endpoint.' });
+    }
+
+   
+    
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true, 
+      runValidators: true, 
+    }).select('-password'); 
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' }); 
+    }
+
+   
+    
+    const token = jwt.sign({ id: updatedUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '30d',
+    });
+
+   
+    
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        profilePicture: updatedUser.profilePicture,
+        createdAt: updatedUser.createdAt,
+      },
+    });
+  } catch (err) {
+    console.error(err); 
+    
+    res.status(500).json({ message: 'Server error' }); 
+  }
+};
 
