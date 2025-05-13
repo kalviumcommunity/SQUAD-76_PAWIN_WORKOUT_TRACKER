@@ -122,4 +122,63 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching user profile' });
   }
 };
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const allowedFields = ['username', 'profilePicture', 'bio']; // Add any other fields you want to allow
+    const updates = {};
 
+    // Filter out unwanted fields
+    for (const key of Object.keys(req.body)) {
+      if (allowedFields.includes(key)) {
+        updates[key] = req.body[key];
+      }
+    }
+
+    // Authorization check
+    if (req.user._id.toString() !== userId && !req.user.isAdmin) {
+      return res.status(403).json({ message: 'Not authorized to update this profile' });
+    }
+
+    // Prevent email or password updates via this route
+    if ('email' in req.body || 'password' in req.body) {
+      return res.status(400).json({ message: 'Email and password updates are not allowed from this endpoint.' });
+    }
+
+    // Update user with validation
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true,
+    }).select('-password');
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Generate new JWT token
+    const token = jwt.sign({ id: updatedUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '30d',
+    });
+
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        profilePicture: updatedUser.profilePicture,
+        bio: updatedUser.bio,
+        createdAt: updatedUser.createdAt,
+      },
+    });
+
+  } catch (err) {
+    console.error("Error in updateUserProfile while updating user profile:", {
+      message: err.message,
+      stack: err.stack,
+    });
+
+    res.status(500).json({ message: 'Server error' });
+  }
+};
