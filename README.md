@@ -70,6 +70,10 @@ The app offers:
 
 ---
 
+## Backend Deployment : https://squad-76-pawin-workout-tracker-3.onrender.com/
+
+---
+
 ## 🔐 Security Best Practices
 
 To keep your data safe and secure:
@@ -80,4 +84,3 @@ PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 
-## Backend Deployment : https://squad-76-pawin-workout-tracker-3.onrender.com/
