@@ -69,8 +69,7 @@ The app offers:
 - **Design**: Figma (UI/UX)
 
 ---
-
-## Backend Deployment : https://squad-76-pawin-workout-tracker-5.onrender.com
+# Backend Deployment : https://squad-76-pawin-workout-tracker-5.onrender.com
 
 ---
 
