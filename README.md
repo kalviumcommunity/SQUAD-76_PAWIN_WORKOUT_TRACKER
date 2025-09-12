@@ -70,6 +70,7 @@ The app offers:
 
 ---
 # Backend Deployment : https://squad-76-pawin-workout-tracker-5.onrender.com
+# Frontend Deployment : https://resplendent-sorbet-4a3a55.netlify.app/
 
 ---
 
