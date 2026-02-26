@@ -74,6 +74,20 @@ The app offers:
 
 ---
 
+## 🧾 API Endpoints (Backend)
+
+The backend exposes the following workout-related routes. All endpoints under `/api/workouts` require a valid JWT token in the `Authorization` header (`Bearer <token>`).
+
+```http
+POST /api/workouts          # create a new workout (body should contain user, exercises, duration, etc.)
+GET  /api/workouts/user/:userId  # retrieve workouts for a specific user (supports query params `limit` and `skip`)
+```
+
+Use any HTTP client (curl, Postman) to exercise these routes. They demonstrate a database **write** (create) and **read** (fetch by user).
+
+
+---
+
 ## 🔐 Security Best Practices
 
 To keep your data safe and secure:
