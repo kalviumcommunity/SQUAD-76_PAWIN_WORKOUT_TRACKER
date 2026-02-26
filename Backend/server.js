@@ -38,6 +38,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/api/users', require('./routes/UsersRoutes'));
+app.use('/api/workouts', require('./routes/workoutsRoutes')); // new workout endpoints
 
 // Optional: add public folder for static files (e.g., frontend or uploads)
 app.use(express.static(path.join(__dirname, 'public')));
